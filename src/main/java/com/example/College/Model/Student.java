@@ -40,7 +40,7 @@ public class Student {
     private Boolean studentIsDeleted;
 
     @Column(name = "student_is_active")
-    private Boolean studentIsActve;
+    private Boolean studentIsActive;
 
     @CreationTimestamp
     @Column(name = "student_created_at",updatable = false)

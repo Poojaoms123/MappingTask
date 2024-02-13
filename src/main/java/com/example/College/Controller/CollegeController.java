@@ -5,6 +5,8 @@ import com.example.College.Model.Response.EntityResponse;
 import com.example.College.Model.SaveRequest.SaveCollegeRequest;
 import com.example.College.Service.CollegeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,13 +35,52 @@ public class CollegeController {
     }
 
     @GetMapping("/getCollegeById")
-    public ResponseEntity<?> getCollegeById(@RequestParam Long collegeId) {
-        try {
+    public ResponseEntity<?> getCollegeById(@RequestParam Long collegeId){
+
+         try{
             return new ResponseEntity<>(new EntityResponse(collegeService.getCollegeById(collegeId), 0), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new EntityResponse(e.getMessage(), -1), HttpStatus.OK);
         }
     }
+    @GetMapping("/getStudentByCollegeId")
+    public ResponseEntity<?> getCollegeById(@RequestParam Long collegeId,
+                                            @RequestParam(defaultValue = "0",required = false)Integer pageNo,
+                                            @RequestParam(defaultValue = "30",required = false)Integer pageSize,
+                                            @RequestParam(required = false)String studentName,
+                                            @RequestParam(required = false)String studentEmail,
+                                            @RequestParam(required = false)String studentMobileNo,
+                                            @RequestParam(required = false)String studentCode) {
+        try {
+            Pageable pageable = PageRequest.of(pageNo,pageSize);
+            return new ResponseEntity<>(new EntityResponse(collegeService.getStudentByCollegeId(collegeId,studentName,studentEmail,studentMobileNo,studentCode,pageable),0), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new EntityResponse(e.getMessage(), -1), HttpStatus.OK);
+        }
+    }
+
+    @RequestMapping(value = "/getAllCollegeStudent", method = RequestMethod.GET)
+    private ResponseEntity<?> getAllCollegeStudent(@RequestParam(required = false)String collegeName,
+                                                   @RequestParam(required = false)String studentName,
+                                                   @RequestParam(required = false)String studentEmail,
+                                                   @RequestParam(required = false)String studentMobileNo,
+                                                   @RequestParam(required = false)String studentCode,
+                                                   @RequestParam(required = false)String collegeWebsite,
+                                                   @RequestParam(defaultValue = "0",required = false)Integer pageNo,
+                                                   @RequestParam(defaultValue = "30",required = false)Integer pageSize){
+        try {
+            Pageable pageable = PageRequest.of(pageNo,pageSize);
+            return new ResponseEntity<>(new EntityResponse(collegeService.getAllCollegeStudent(collegeName,studentName,studentEmail,studentMobileNo,studentCode,collegeWebsite,pageable), 0), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new EntityResponse(e.getMessage(), -1), HttpStatus.OK);
+        }
+
+
+    }
+
+
+
+
 
     @DeleteMapping("/deleteCollegeById")
     public ResponseEntity<?> deleteCollegeById(@RequestParam Long collegeId) {
