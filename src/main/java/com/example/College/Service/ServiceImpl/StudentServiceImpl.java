@@ -137,10 +137,7 @@ public class StudentServiceImpl implements StudentService {
             helper.setText(body);
 
             // Add Attachment
-            helper.addAttachment(
-                    Objects.requireNonNull(attachment.getOriginalFilename()),
-                    new ByteArrayResource(attachment.getBytes())
-            );
+            helper.addAttachment(attachment.getOriginalFilename(), new ByteArrayResource(attachment.getBytes()));
 
             javaMailSender.send(mimeMessage);
         } catch (MessagingException | IOException e) {
